@@ -1,24 +1,21 @@
-const express = require( 'express' );
-const bodyParser = require("body-parser")
+const express = require('express');
+const bodyParser = require('body-parser');
+const connectDB = require('./config/db');
+const activityRoutes = require('./routes/activityRoutes');
+require('dotenv').config();
 
 const app = express();
+const PORT = process.env.PORT || 3000;
 
-app.use(bodyParser.json())
-app.use(bodyParser.urlencoded({ extended: false }))
+// Connect to MongoDB
+connectDB();
 
-app.get( '/', function ( req, res ) {
-        res.send("Hello, World!")
-    }
-);
+// Middleware
+app.use(bodyParser.json());
 
-app.post('/git-webhook', function(req, res) {
-    let data = req.body;
-    console.log(data);
-    res.send('Received!');
-})
+// Routes
+app.use('/', activityRoutes);
 
-const port = 8008;
-
-app.listen( port, function() {
-  console.log( `App listening on port ${port}!` )
+app.listen(PORT, () => {
+    console.log(`Server is running on port ${PORT}`);
 });
